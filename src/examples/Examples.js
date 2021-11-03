@@ -18,7 +18,8 @@ export class Examples extends React.Component {
         <ol>
           {examples.map((example, i) => (
             <li key={`example-${i}`}>
-              <code>{example.value}</code><span className="comment"> {example.comment}</span><br />
+              <code onClick={() => navigator.clipboard.writeText(example.value)} title="Click to copy">{example.value}</code>
+              <span> {example.comment}</span><br />
             </li>
           ))}
         </ol>

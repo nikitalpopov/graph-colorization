@@ -1,4 +1,8 @@
-.comment {
+li > code:hover {
+  background-color: bisque;
+}
+
+li > span {
   color: green;
   user-select: none;
 }

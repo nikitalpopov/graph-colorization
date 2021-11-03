@@ -8,9 +8,13 @@ export class Container extends React.Component {
     super(props);
 
     this.state = {
+      /* Inputted graph description */
       value: '',
+      /* Info about node colors (since only 2 colors are used, boolean value is mapped to node name) */
       colorization: {},
+      /* Info about node links (array of linked node names is mapped to node name) */
       connectivity: {},
+      buttonDisabled: true,
       error: undefined,
       graph: undefined
     };
@@ -22,8 +26,8 @@ export class Container extends React.Component {
   render() {
     return (
       <div>
-        <input type="text" value={this.state.value} onChange={(event) => this.setValue(event.target.value)} />
-        <button disabled={!this.state.value.length} onClick={this.checkGraph}>Check graph</button>
+        <input type="text" value={this.state.value} onInput={(event) => this.setValue(event.target.value)} />
+        <button disabled={this.state.buttonDisabled} onClick={this.checkGraph}>Check graph</button>
         {this.state.error}
         {this.state.graph}
       </div>
@@ -34,6 +38,7 @@ export class Container extends React.Component {
     this.setState({
       colorization: {},
       connectivity: {},
+      buttonDisabled: true,
       error: undefined,
       graph: undefined
     });
@@ -80,9 +85,10 @@ export class Container extends React.Component {
 
     try {
       this.handleInput(value);
-      this.setState({ value });
+      this.setState({ value, buttonDisabled: false });
     } catch (e) {
-      this.setState({ error: <Error error={e.message} /> });
+      this.clearState();
+      this.setState({ error: <Error error={e.message} />, buttonDisabled: true });
       // throw e;
     }
   }
@@ -134,7 +140,8 @@ export class Container extends React.Component {
       this.checkIfConnected();
       this.setState({ graph: <Graph colorization={this.state.colorization} connectivity={this.state.connectivity} /> });
     } catch (e) {
-      this.setState({ error: <Error error={e.props} /> });
+      this.clearState();
+      this.setState({ error: <Error error={e.props} />, buttonDisabled: true });
       // throw e;
     }
   }
