@@ -1,7 +1,9 @@
 .App {
-  padding: 0 16px;
+  padding: 16px;
+  max-width: 900px;
 }
 
 .description {
-  max-width: 900px;
+  margin-bottom: 16px;
+  margin-top: 0;
 }

@@ -1,8 +1,7 @@
+import { Text } from 'grommet';
 import React from 'react';
 import './Error.css';
 
 export class Error extends React.Component {
-  render() {
-    return (<div className="error" style={{ color: "red" }}>{this.props.error}</div>);
-  }
+  render = () => (<Text color="status-error" weight="bolder">{this.props.error}</Text>);
 }

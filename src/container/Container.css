@@ -1,0 +1,13 @@
+.wrapper {
+  display: flex;
+}
+
+.input {
+  display: inline-block;
+  margin-right: 16px;
+  width: 500px;
+}
+
+.button {
+  height: min-content;
+}

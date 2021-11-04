@@ -1,8 +1,11 @@
+li > code {
+  padding: 0 4px;
+}
+
 li > code:hover {
-  background-color: bisque;
+  background-color: #ffca3aff;
 }
 
 li > span {
-  color: green;
   user-select: none;
 }

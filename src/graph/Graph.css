@@ -1,4 +1,8 @@
+.graph {
+  display: flex;
+  justify-content: center;
+}
+
 svg {
-  background-color: lightgray;
   margin: 16px 0;
 }

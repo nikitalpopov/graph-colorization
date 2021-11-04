@@ -1,3 +1,4 @@
+import { Button, TextInput } from 'grommet';
 import React from 'react';
 import { Error } from '../error/Error';
 import { Graph } from '../graph/Graph';
@@ -28,9 +29,17 @@ export class Container extends React.Component {
   render() {
     return (
       <div>
-        <input type="text" onChange={(event) => this.setValue(event.target.value)} />
-        <button disabled={this.state.buttonDisabled} onClick={this.checkGraph}>Check graph</button>
-        {this.state.error}
+        <div className="wrapper">
+          <div className="input">
+            <TextInput
+              placeholder="enter graph description"
+              onChange={(event) => this.setValue(event.target.value)}
+              dropHeight="small"
+            />
+            {this.state.error}
+          </div>
+          <Button className="button" disabled={this.state.buttonDisabled} onClick={this.checkGraph} primary label="check graph" />
+        </div>
         {this.state.graph}
       </div>
     );
