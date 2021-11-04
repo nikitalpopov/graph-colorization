@@ -7,8 +7,8 @@ export class Graph extends React.Component {
     const coords = {};
     nodes.forEach((node, i) => {
       coords[node] = {
-        x: 250 + Math.sin(2 * Math.PI * i / nodes.length) * 200,
-        y: 250 + Math.cos(2 * Math.PI * i / nodes.length) * 200
+        x: 250 + Math.cos(2 * Math.PI * i / nodes.length - 0.5 * Math.PI) * 200,
+        y: 250 + Math.sin(2 * Math.PI * i / nodes.length - 0.5 * Math.PI) * 200
       };
     });
 
@@ -42,7 +42,7 @@ export class Graph extends React.Component {
                     r={5}
                     strokeWidth={10}
                   ></circle>
-                  <text textAnchor="middle" fill="white" x={coords[node].x} y={coords[node].y + 4}>{node}</text>
+                  <text textAnchor="middle" fill="white" stroke="black" strokeWidth="0.5" fontSize="22" fontWeight="bold" x={coords[node].x} y={coords[node].y + 5}>{node}</text>
                 </g>
               );
             })

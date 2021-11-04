@@ -3,6 +3,6 @@ import './Error.css';
 
 export class Error extends React.Component {
   render() {
-    return (<div style={{ color: "red" }}>{this.props.error}</div>);
+    return (<div className="error" style={{ color: "red" }}>{this.props.error}</div>);
   }
 }

@@ -7,7 +7,7 @@ export class Container extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
+    this.initialState = {
       /* Inputted graph description */
       value: '',
       /* Info about node colors (since only 2 colors are used, boolean value is mapped to node name) */
@@ -19,6 +19,8 @@ export class Container extends React.Component {
       graph: undefined
     };
 
+    this.state = {...this.initialState};
+
     this.checkGraph = this.checkGraph.bind(this);
     this.setValue = this.setValue.bind(this);
   }
@@ -26,7 +28,7 @@ export class Container extends React.Component {
   render() {
     return (
       <div>
-        <input type="text" value={this.state.value} onInput={(event) => this.setValue(event.target.value)} />
+        <input type="text" onChange={(event) => this.setValue(event.target.value)} />
         <button disabled={this.state.buttonDisabled} onClick={this.checkGraph}>Check graph</button>
         {this.state.error}
         {this.state.graph}
@@ -34,8 +36,23 @@ export class Container extends React.Component {
     );
   }
 
-  clearState() {
-    this.setState({
+  /**
+   * Saves received graph description into state
+   */
+  async setValue(value) {
+    await this.clearState();
+    try {
+      this.handleInput(value);
+      this.setState({ value, buttonDisabled: false });
+    } catch (e) {
+      await this.clearState();
+      this.setState({ error: <Error error={e.props} />, buttonDisabled: true });
+      // throw e;
+    }
+  }
+
+  async clearState() {
+    await this.setState({
       colorization: {},
       connectivity: {},
       buttonDisabled: true,
@@ -78,22 +95,6 @@ export class Container extends React.Component {
   }
 
   /**
-   * Saves received graph description into state
-   */
-  setValue(value) {
-    this.clearState();
-
-    try {
-      this.handleInput(value);
-      this.setState({ value, buttonDisabled: false });
-    } catch (e) {
-      this.clearState();
-      this.setState({ error: <Error error={e.message} />, buttonDisabled: true });
-      // throw e;
-    }
-  }
-
-  /**
    * Saves info about links between nodes
    */
   addLink(a, b) {
@@ -104,6 +105,28 @@ export class Container extends React.Component {
     // If node connected to itself, it doesn't satisfy colorization requirements
     if (a === b) {
       throw new Error("Graph with a loop can't be painted");
+    }
+  }
+
+  async checkGraph() {
+    try {
+      this.checkIfConnected();
+      this.setState({ graph: <Graph colorization={this.state.colorization} connectivity={this.state.connectivity} /> });
+    } catch (e) {
+      await this.clearState();
+      this.setState({ error: <Error error={e.props} />, buttonDisabled: true });
+      // throw e;
+    }
+  }
+
+  /**
+   * Checks if graph is connected by iterating nodes with breadth-first search (https://en.wikipedia.org/wiki/Breadth-first_search)
+   */
+  checkIfConnected() {
+    this.checkNode(Object.keys(this.state.connectivity)[0], true);
+
+    if (Object.values(this.state.colorization).some(color => color === null)) {
+      throw new Error(`Graph is not connected`);
     }
   }
 
@@ -121,28 +144,6 @@ export class Container extends React.Component {
       });
     } else if (this.state.colorization[currentNode] !== color) {
       throw new Error(`Node '${currentNode}' can't be painted with one color`);
-    }
-  }
-
-  /**
-   * Checks if graph is connected by iterating nodes with breadth-first search (https://en.wikipedia.org/wiki/Breadth-first_search)
-   */
-  checkIfConnected() {
-    this.checkNode(Object.keys(this.state.connectivity)[0], true);
-
-    if (Object.values(this.state.colorization).some(color => color === null)) {
-      throw new Error(`Graph is not connected`);
-    }
-  }
-
-  checkGraph() {
-    try {
-      this.checkIfConnected();
-      this.setState({ graph: <Graph colorization={this.state.colorization} connectivity={this.state.connectivity} /> });
-    } catch (e) {
-      this.clearState();
-      this.setState({ error: <Error error={e.props} />, buttonDisabled: true });
-      // throw e;
     }
   }
 }
